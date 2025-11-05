@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: kong
+      POSTGRES_USER: kong
+      POSTGRES_PASSWORD: kong
+    volumes:
+      - kong_pgdata:/var/lib/postgresql/data
+
+  kong-cp:
+    image: kong:3.9.1
+    env_file: kong.env
+    environment:
+      KONG_ROLE: control_plane
+    ports:
+      - "8001:8001"
+      - "8005:8005"
+    volumes:
+      - ./certs:/certs
+    depends_on:
+      - postgres
+
+  kong-dp:
+    image: kong:3.9.1
+    env_file: kong.env
+    environment:
+      KONG_ROLE: data_plane
+      KONG_DATABASE: "off"
+      KONG_CLUSTER_CONTROL_PLANE: kong-cp:8005
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./certs:/certs
+    depends_on:
+      - kong-cp
+
+volumes:
+  kong_pgdata:

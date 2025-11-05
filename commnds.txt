@@ -1,0 +1,8 @@
+docker compose -f docker-compose.migrations.yml up --abort-on-container-exit
+docker rm kong-migrations
+
+docker compose up -d
+
+curl -X POST http://localhost:8001/services --data name=httpbin --data url=http://httpbin.org
+curl -X POST http://localhost:8001/routes --data "service.name=httpbin" --data "paths[]=/httpbin"
+curl http://localhost:8000/httpbin/get

@@ -1,0 +1,20 @@
+# Ignore all files in certs folder, but keep the folder
+certs/*
+!certs/.gitkeep
+
+# Ignore environment file
+kong.env
+
+# Keep example env and scripts
+!kong.env.example
+!scripts/
+!docker-compose*.yml
+!conf/
+
+# Ignore logs and temp files
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.pid
