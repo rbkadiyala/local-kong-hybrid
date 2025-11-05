@@ -1,4 +1,4 @@
-# Hands-On Lab (Docker) — Copy / Paste
+# Proof Of technology (Docker) — Copy / Paste
 
 Follow these exact commands in a terminal to bring up the lab.
 
@@ -147,7 +147,7 @@ EOF
 
 ```bash
 docker compose -f docker-compose-migrations.yml up --abort-on-container-exit
-docker rm kong-migrations
+docker rm kong-hybrid-kong-migrations-1
 ```
 
 ---
@@ -173,7 +173,7 @@ Expected fields: `database.reachable = true` and `role = control_plane`.
 ## 10) Verify Data Plane (DP) logs
 
 ```bash
-docker logs kong-dp --tail 100
+docker logs  kong-hybrid-kong-dp-1 --tail 100
 ```
 
 Look for lines similar to `connected to control plane`.
@@ -183,12 +183,9 @@ Look for lines similar to `connected to control plane`.
 ## 11) Create a test service and route
 
 ```bash
-curl -X POST http://localhost:8001/services \
-  --data name=httpbin \
-  --data url=http://httpbin.org
+curl -X POST http://localhost:8001/services --data name=httpbin --data url=http://httpbin.org
 
-curl -X POST http://localhost:8001/services/httpbin/routes \
-  --data paths[]=/test
+curl -X POST http://localhost:8001/services/httpbin/routes --data paths[]=/test
 ```
 
 ---
@@ -217,10 +214,10 @@ curl -X POST http://localhost:8001/consumers --data "username=testuser"
 curl -X POST http://localhost:8001/consumers/testuser/key-auth
 
 # Test unauthorized request (should fail 401)
-curl http://localhost:8000/httpbin/get
+curl http://localhost:8000/test/get
 
 # Test authorized request using API key
-curl -H "apikey: <api-key>" http://localhost:8000/httpbin/get
+curl -H "apikey: <api-key>" curl http://localhost:8000/test/get
 ```
 
 ---
