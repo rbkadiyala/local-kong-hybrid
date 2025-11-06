@@ -146,8 +146,8 @@ EOF
 ## 7) Start Kong migrations
 
 ```bash
-docker compose -f docker-compose-migrations.yml up --abort-on-container-exit
-docker rm kong-hybrid-kong-migrations-1
+docker compose -f docker-compose.migrations.yml up --abort-on-container-exit
+docker rm local-kong-hybrid-kong-migrations-1
 ```
 
 ---
@@ -185,7 +185,7 @@ Look for lines similar to `connected to control plane`.
 ```bash
 curl -X POST http://localhost:8001/services --data name=httpbin --data url=http://httpbin.org
 
-curl -X POST http://localhost:8001/services/httpbin/routes --data paths[]=/test
+curl -X POST http://localhost:8001/services/httpbin/routes --data paths[]=/httpbin
 ```
 
 ---
@@ -193,7 +193,7 @@ curl -X POST http://localhost:8001/services/httpbin/routes --data paths[]=/test
 ## 12) Test via Kong
 
 ```bash
-curl http://localhost:8000/test/get
+curl http://localhost:8000/httpbin/get
 ```
 
 ---
@@ -214,10 +214,10 @@ curl -X POST http://localhost:8001/consumers --data "username=testuser"
 curl -X POST http://localhost:8001/consumers/testuser/key-auth
 
 # Test unauthorized request (should fail 401)
-curl http://localhost:8000/test/get
+curl http://localhost:8000/httpbin/get
 
 # Test authorized request using API key
-curl -H "apikey: <api-key>" curl http://localhost:8000/test/get
+curl -H "apikey: <api-key>" http://localhost:8000/httpbin/get
 ```
 
 ---
